@@ -19,17 +19,21 @@ let g:lastbuf_num=20
 let g:lastbuf_seekall=1
 
 function! AddLastBuf(e) "{{{
-    let b=expand('<abuf>') 
-    if b <= 0
-        return
-    endif
     let h= &hidden || g:lastbuf_seekall
     if a:e==0 
+        let b=expand('<abuf>') 
+        if b <= 0
+            return
+        endif
         call insert(s:bufList,b)
     elseif a:e==1 
     elseif a:e==2 && h
     elseif a:e==3 && h
     else
+        let b=expand('<abuf>') 
+        if b <= 0
+            return
+        endif
         if exists("s:bufList[0]") && s:bufList[0] == b
             call remove(s:bufList,0)
         endif
