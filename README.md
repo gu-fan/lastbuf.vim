@@ -6,9 +6,8 @@ buffers closed with :bw (!!CAUTION) will not be reopened.
 
 
 
-    :LastBuf
-    mapping is <c-w><c-z> by default.
-    you can remapping it by 
+    ":LastBuf mapping is <c-w><c-z> by default.
+    "you can remapping it by 
     map <c-s-t> :LastBuf<CR>
 
     " g:lastbuf_num option decides the max reopen buf number.
