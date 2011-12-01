@@ -1,8 +1,8 @@
 
 lastbuf.vim is a plugin to open last closed buffers.
 You can reopen your last closed buffer by :LastBuf or <c-w><c-z>.
-buffers closed with :e # :hid will always be opened.
-buffers closed with :q :only :close :bun :bd will be reopened by default.
+buffers closed with :hid will always be opened.
+buffers closed with :e # :q :only :close :bun :bd will be reopened by default.
 buffers closed with :bw (!!CAUTION) will not be reopened.
 
 you can get the newest version at https://github.com/Rykka/lastbuf.vim
