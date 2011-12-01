@@ -2,8 +2,8 @@
 "  Script: LastBuf
 "    File: plugin/lastbuf.vim
 " Summary: open last closed buffers.
-"  Author: Rykka.Krin <Rykka.Krin(at)gmail.com>
-" Last Update: 2011-12-01
+"  Author: Rykka <Rykka10(at)gmail.com>
+" Last Update: 2011-12-02
 "=============================================================
 
 let s:save_cpo = &cpo
