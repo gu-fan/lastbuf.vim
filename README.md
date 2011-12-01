@@ -4,6 +4,7 @@ You can reopen your last closed buffer by :LastBuf or <c-w><c-z>.
 buffers closed with :e # :q :hid :only :close :bun :bd will be reopened.
 buffers closed with :bw (!!CAUTION) will not be reopened.
 
+you can get the newest version at https://github.com/Rykka/lastbuf.vim
 
 
     ":LastBuf mapping is <c-w><c-z> by default.
