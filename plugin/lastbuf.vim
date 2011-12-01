@@ -25,9 +25,9 @@ function! AddLastBuf(e) "{{{
             return
         endif
         call insert(s:bufList,b)
-    elseif a:e==1 
+    " elseif a:e==1 
     elseif a:e==2 && h
-    elseif a:e==3 && h
+    " elseif a:e==3 && h
     else
         let b=expand('<abuf>') 
         if b <= 0
@@ -50,9 +50,9 @@ aug LastBuf "{{{
     au! 
     au VimEnter     *   let s:bufList=[]
     au BufWinLeave  *   call AddLastBuf(0)
-    au BufHidden    *   call AddLastBuf(1)
+    " au BufHidden    *   call AddLastBuf(1)
     au BufUnload    *   call AddLastBuf(2)
-    au BufDelete    *   call AddLastBuf(3)
+    " au BufDelete    *   call AddLastBuf(3)
     au BufWipeout   *   call AddLastBuf(4)
 aug END "}}}
 
