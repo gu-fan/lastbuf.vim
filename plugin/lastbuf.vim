@@ -21,21 +21,22 @@ let g:lastbuf_num=20
 " set it to 0 and  set 'nohidden'
 let g:lastbuf_level=1
 
-function! s:addLastBuf(e) "{{{
-    if a:e==0 
-        let b=expand('<abuf>') 
-        if b > 0
-            call insert(s:bufList,b)
-        endif
-    elseif ( a:e==2 && g:lastbuf_level == 0 ) 
-      \ || ( a:e==3 && g:lastbuf_level == 1 )
-      \ || ( a:e==4 && g:lastbuf_level >= 2 )
+function! s:addLastBuf() "{{{
+    let b=expand('<abuf>') 
+    if b > 0
+        call insert(s:bufList,b)
+    endif
+endfunction "}}}
+function! s:chkLastBuf(e)
+    if ( a:e==1 && g:lastbuf_level == 0 ) 
+      \ || ( a:e==2 && g:lastbuf_level == 1 )
+      \ || ( a:e==3 && g:lastbuf_level >= 2 )
         let b=expand('<abuf>') 
         if b > 0 && exists("s:bufList[0]") && s:bufList[0] == b
             call remove(s:bufList,0)
         endif
     endif
-endfunction "}}}
+endfunction
 function! s:openLastBuf() "{{{
     if len(s:bufList) !=0
         exec "sb ".remove(s:bufList,0)
@@ -47,11 +48,11 @@ endfunction "}}}
 aug lastbuf#LastBuf "{{{
     au! 
     au VimEnter     *   let s:bufList=[]
-    au BufWinLeave  *   call s:addLastBuf(0)
-    " au BufHidden    *   call s:addLastBuf(1)
-    au BufUnload    *   call s:addLastBuf(2)
-    au BufDelete    *   call s:addLastBuf(3)
-    au BufWipeout   *   call s:addLastBuf(4)
+    au BufWinLeave  *   call s:addLastBuf()
+    " au BufHidden    *   call s:chkLastBuf(0)
+    au BufUnload    *   call s:chkLastBuf(1)
+    au BufDelete    *   call s:chkLastBuf(2)
+    au BufWipeout   *   call s:chkLastBuf(3)
 aug END "}}}
 
 command! -nargs=0  LastBuf call <SID>openLastBuf()
