@@ -41,7 +41,7 @@ function! s:openLastBuf() "{{{
     if len(s:bufList) !=0
         exec "sb ".remove(s:bufList,0)
         if len(s:bufList) > g:lastbuf_num+10
-            call remove(s:bufList,20,-1)
+            call remove(s:bufList,g:lastbuf_num,-1)
         endif
     endif
 endfunction "}}} 
