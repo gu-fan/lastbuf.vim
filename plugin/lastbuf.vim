@@ -11,17 +11,17 @@ set cpo&vim
 
 " this option decides the max reopen buf number.
 let g:lastbuf_num=20
-" this option decides to reopen which hide level of buffer.
+" this option decides to reopen which level of hided buffer.
 " :hid   bufhidden  (will always be reopened)
 " :bun   bufunload  (will be reopened if level >= 1)
 " :bd    bufdelete  (will be reopened if level >= 2)
-" :bw    bufwipeout (will never be reopened)
-" default is 1 .
+" :bw    bufwipeout (will never be reopened!CAUTION!!)
+" default is 1 , means :bd and :bw not be reopened.
 " if you want the same effect of 'nohidden'. 
 " set it to 0 and  set 'nohidden'
-let g:lastbuf_level=0
+let g:lastbuf_level=1
 
-function! AddLastBuf(e) "{{{
+function! s:addLastBuf(e) "{{{
     if a:e==0 
         let b=expand('<abuf>') 
         if b > 0
@@ -36,7 +36,7 @@ function! AddLastBuf(e) "{{{
         endif
     endif
 endfunction "}}}
-function! OpenLastBuf() "{{{
+function! s:openLastBuf() "{{{
     if len(s:bufList) !=0
         exec "sb ".remove(s:bufList,0)
         if len(s:bufList) > g:lastbuf_num+10
@@ -44,17 +44,17 @@ function! OpenLastBuf() "{{{
         endif
     endif
 endfunction "}}} 
-aug LastBuf "{{{
+aug lastbuf#LastBuf "{{{
     au! 
     au VimEnter     *   let s:bufList=[]
-    au BufWinLeave  *   call AddLastBuf(0)
-    " au BufHidden    *   call AddLastBuf(1)
-    au BufUnload    *   call AddLastBuf(2)
-    au BufDelete    *   call AddLastBuf(3)
-    au BufWipeout   *   call AddLastBuf(4)
+    au BufWinLeave  *   call s:addLastBuf(0)
+    " au BufHidden    *   call s:addLastBuf(1)
+    au BufUnload    *   call s:addLastBuf(2)
+    au BufDelete    *   call s:addLastBuf(3)
+    au BufWipeout   *   call s:addLastBuf(4)
 aug END "}}}
 
-command! -nargs=0  LastBuf call OpenLastBuf()
+command! -nargs=0  LastBuf call <SID>openLastBuf()
 if !hasmapto(':LastBuf<CR>')
   silent! nmap <unique> <silent> <c-w>z :LastBuf<CR>
   silent! nmap <unique> <silent> <c-w><c-z> :LastBuf<cr>
