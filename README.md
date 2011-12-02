@@ -12,6 +12,9 @@ buffers closed by :bd will not be reopened by default.
 buffers closed by :bw (!!CAUTION) will never be reopened.
 
 
+**NOTE**  Close buffer which still have another window editing it 
+          will not be reopened.
+
 you can get the newest version at https://github.com/Rykka/lastbuf.vim
 
 
