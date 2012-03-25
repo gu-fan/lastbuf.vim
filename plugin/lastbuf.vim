@@ -3,7 +3,7 @@
 "    File: plugin/lastbuf.vim
 " Summary: open last closed buffers.
 "  Author: Rykka <Rykka10(at)gmail.com>
-" Last Update: 2011-12-02
+" Last Update: 2012-03-25
 "=============================================================
 
 let s:save_cpo = &cpo
@@ -21,45 +21,65 @@ let g:lastbuf_num=20
 " set it to 0 and  set 'nohidden'
 let g:lastbuf_level=1
 
-function! s:addLastBuf() "{{{
-    let b=expand('<abuf>') 
-    if b > 0
-        call insert(s:bufList,b)
+let s:bufList=[]
+" 'tab':tab '':split 'vert':vertical
+let s:w = ''
+function! s:setLastBuf() "{{{
+    if winwidth(0) < &columns
+        let s:w = 'vert'
+    else
+        if tabpagenr() > 1 && len(tabpagebuflist()) == 1
+            let s:w = 'tab'
+        else
+            let s:w = ''
+        endif
     endif
 endfunction "}}}
-function! s:chkLastBuf(e)
-    if ( a:e==1 && g:lastbuf_level == 0 ) 
-      \ || ( a:e==2 && g:lastbuf_level == 1 )
-      \ || ( a:e==3 && g:lastbuf_level >= 2 )
+function! s:addLastBuf() "{{{
+    let b = expand('<abuf>') 
+    if b > 0
+        call insert(s:bufList,[b,s:w])
+    endif
+endfunction "}}}
+function! s:chkLastBuf(e) "{{{
+    if ( a:e=="unload" && g:lastbuf_level == 0 ) 
+      \ || ( a:e=="delete" && g:lastbuf_level == 1 )
+      \ || ( a:e=="wipeout" && g:lastbuf_level >= 2 )
         let b=expand('<abuf>') 
-        if b > 0 && exists("s:bufList[0]") && s:bufList[0] == b
+        if b > 0 && len(s:bufList)!=0 && s:bufList[0][0] == b
             call remove(s:bufList,0)
         endif
     endif
-endfunction
+endfunction "}}}
 function! s:openLastBuf() "{{{
-    if len(s:bufList) !=0
-        exec "sb ".remove(s:bufList,0)
+    if len(s:bufList) != 0
+        " reopen the tab
+        let [b,w] = remove(s:bufList,0)
+        exec w." sb ".b
+        
+        " remove long list last items
         if len(s:bufList) > g:lastbuf_num+10
             call remove(s:bufList,g:lastbuf_num,-1)
         endif
     endif
 endfunction "}}} 
+command! -nargs=0  LastBuf call <SID>openLastBuf()
 aug lastbuf#LastBuf "{{{
     au! 
-    au VimEnter     *   let s:bufList=[]
+    " BufWinLeave is triggered after the window is closed. 
+    " so use BufLeave to get the closing window info.
+    au BufLeave     *   call s:setLastBuf()
     au BufWinLeave  *   call s:addLastBuf()
-    " au BufHidden    *   call s:chkLastBuf(0)
-    au BufUnload    *   call s:chkLastBuf(1)
-    au BufDelete    *   call s:chkLastBuf(2)
-    au BufWipeout   *   call s:chkLastBuf(3)
-aug END "}}}
 
-command! -nargs=0  LastBuf call <SID>openLastBuf()
-if !hasmapto(':LastBuf<CR>')
+    " au BufHidden    *   call s:chkLastBuf("hidden")
+    au BufUnload    *   call s:chkLastBuf("unload")
+    au BufDelete    *   call s:chkLastBuf("delete")
+    au BufWipeout   *   call s:chkLastBuf("wipeout")
+aug END "}}}
+if !hasmapto(':LastBuf<CR>') "{{{
   silent! nmap <unique> <silent> <c-w>z :LastBuf<CR>
   silent! nmap <unique> <silent> <c-w><c-z> :LastBuf<cr>
-endif
+endif "}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
