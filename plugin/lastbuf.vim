@@ -3,14 +3,13 @@
 "    File: plugin/lastbuf.vim
 " Summary: open last closed buffers.
 "  Author: Rykka <Rykka10(at)gmail.com>
-" Last Update: 2012-03-25
+" Last Update: 2012-04-03
 "=============================================================
 
 let s:save_cpo = &cpo
 set cpo&vim
-
 " this option decides the max reopen buf number.
-let g:lastbuf_num=20
+let g:lastbuf_num= exists("g:lastbuf_num") ? g:lastbuf_num : 20
 " this option decides to reopen which level of hided buffer.
 " :hid   bufhidden  (will always be reopened)
 " :bun   bufunload  (will be reopened if level >= 1)
@@ -19,20 +18,16 @@ let g:lastbuf_num=20
 " default is 1 , means :bd and :bw not be reopened.
 " if you want the same effect of 'nohidden'. 
 " set it to 0 and  set 'nohidden'
-let g:lastbuf_level=1
+let g:lastbuf_level= exists("g:lastbuf_level") ? g:lastbuf_level : 1
 
 let s:bufList=[]
 " 'tab':tab '':split 'vert':vertical
 let s:w = ''
 function! s:setLastBuf() "{{{
-    if winwidth(0) < &columns
-        let s:w = 'vert'
+    if tabpagenr() > 1 && len(tabpagebuflist()) == 1
+        let s:w = 'tab'
     else
-        if tabpagenr() > 1 && len(tabpagebuflist()) == 1
-            let s:w = 'tab'
-        else
-            let s:w = ''
-        endif
+        let s:w = ''
     endif
 endfunction "}}}
 function! s:addLastBuf() "{{{
