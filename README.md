@@ -1,3 +1,4 @@
+##Lastbuf
 
 lastbuf.vim is a plugin to open your last closed buffers.
 
