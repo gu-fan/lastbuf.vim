@@ -1,5 +1,7 @@
 ##Lastbuf
 
+**REOPEN YOUR LAST CLOSED WINDOW**
+
 lastbuf.vim is a plugin to open your last closed buffers.
 
 You can reopen your last closed buffer by :LastBuf or `<c-w><c-z>`.
